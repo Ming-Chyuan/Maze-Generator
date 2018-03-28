@@ -5,9 +5,7 @@ Implementation of [maze generation algorithm](https://en.wikipedia.org/wiki/Maze
 ## Maze solver
 Solve the maze by [A* search algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm).
 
-Here is a introduction of A* search algorithm:
-
-[![video](https://i.ytimg.com/vi/pKnV6ViDpAI/hqdefault.jpg?sqp=-oaymwEYCKgBEF5IVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLAkhKHdMlpVvLGdYj7B8BGK0eFvsg)](https://youtu.be/pKnV6ViDpAI?t=201)
+[![video img](https://i.ytimg.com/vi/pKnV6ViDpAI/hqdefault.jpg?sqp=-oaymwEYCKgBEF5IVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLAkhKHdMlpVvLGdYj7B8BGK0eFvsg)](https://youtu.be/pKnV6ViDpAI?t=201)
 
 ## Screenshots
 ![screenshot](https://raw.githubusercontent.com/Ming-Chyuan/Maze-Generator/master/img/screenshot1.png)
