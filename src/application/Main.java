@@ -21,7 +21,7 @@ public class Main extends Application {
 		mazePane = new MazePane(width, height, cellSize);
 		
 		Scene scene = new Scene(mazePane, width, height);
-		primaryStage.setTitle("Maze Generator");
+		primaryStage.setTitle("Maze Generator and Solver");
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.initStyle(StageStyle.UTILITY);
