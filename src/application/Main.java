@@ -16,7 +16,7 @@ public class Main extends Application {
 	private static final int speed = 100; // how many steps move in one second
 	
 	private static MazePane mazePane;
-	
+
 	private static void envirInit(Stage primaryStage) {
 		mazePane = new MazePane(width, height, cellSize);
 		
@@ -34,8 +34,13 @@ public class Main extends Application {
 		
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
-			public void handle(long arg0) {
-				mazePane.update();
+			public void handle(long arg0) { 
+				if(!mazePane.finish) {
+					mazePane.generateMaze();
+				} else {
+					
+				}
+				
 				try {
 					TimeUnit.MILLISECONDS.sleep(1000 / speed);
 				} catch (InterruptedException e) {

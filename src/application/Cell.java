@@ -9,13 +9,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class Cell extends Group {
-	private final int x;
-	private final int y;
 	private final int size;
+	private Point pos;
 	private Rectangle floor;
 	
-	public int rowInGrid;
-	public int colInGrid; 
 	public boolean visited = false;
 	public boolean popped = false;
 
@@ -23,29 +20,25 @@ public class Cell extends Group {
 	public boolean[] hasWalls = {true, true, true, true}; // top right bottom left
 	
 	public Cell(int row, int col, int size) {
-		rowInGrid = row;
-		colInGrid = col;
-		x = col * size;
-		y = row * size;
+		pos = new Point(row, col, col * size, row * size);
 		this.size = size;
 		
 		buildFloor();
 		buildWalls();
 	}
 	
-	public void setFloorColor(Color c) {
-		floor.setFill(c);
-	}
-	
 	private void buildFloor() {
-		floor = new Rectangle(x, y, size, size);
-		floor.setFill(new Color(0.25, 0.25, 0.25, 1));
+		floor = new Rectangle(pos.x, pos.y, size, size);
+		floor.setFill(MyColor.floorColor);
 		this.getChildren().add(floor);
 	}
 	
 	public void buildWalls() {
 		this.getChildren().removeAll(walls);
 		walls.clear();
+		
+		int x = pos.x;
+		int y = pos.y;
 		
 		if(hasWalls[DirectionType.TOP])
 			walls.add(newWall(x, y, x + size, y));
@@ -61,7 +54,15 @@ public class Cell extends Group {
 	
 	private Line newWall(int startX, int startY, int endX, int endY) {
 		Line l = new Line(startX, startY, endX, endY);
-		l.setStroke(Color.WHITE);
+		l.setStroke(MyColor.wallColor);
 		return l;
+	}
+	
+	public void setFloorColor(Color c) {
+		floor.setFill(c);
+	}
+	
+	public Point getPos() {
+		return pos;
 	}
 }

@@ -12,11 +12,12 @@ public class MazePane extends Pane {
 	private int cols;
 	private int startRow = 0;
 	private int startCol = 0;
-	
 	private Cell[][] grid;
 	private Cell currentCell;
-	
+
 	private Stack<Cell> stack = new Stack<>();
+	
+	public boolean finish = false;
 
 	public MazePane(int width, int height, int cellSize) {
 		rows = height / cellSize;
@@ -33,12 +34,12 @@ public class MazePane extends Pane {
 		currentCell = grid[startRow][startCol];
 	}
 	
-	public void update() {		
+	public void generateMaze() {		
 		currentCell.visited = true;
-		currentCell.setFloorColor(Color.DEEPSKYBLUE);
+		currentCell.setFloorColor(MyColor.visitedColor);
 		
 		if(currentCell.popped)
-			currentCell.setFloorColor(Color.ORANGE);
+			currentCell.setFloorColor(MyColor.backtrackColor);
 		
 		// WIKI: Maze generation algorithm
 		Cell nextCell = checkNeighbors(currentCell);
@@ -49,20 +50,27 @@ public class MazePane extends Pane {
 			removeWalls(currentCell, nextCell);
 			
 			currentCell = nextCell;
-			currentCell.setFloorColor(Color.DEEPPINK);
+			currentCell.setFloorColor(MyColor.currnetColor);
 		} else if(!stack.isEmpty()) {
 			// current cell is dead end 
-			currentCell.setFloorColor(Color.ORANGE);
+			currentCell.setFloorColor(MyColor.backtrackColor);
 			
 			// backtrack to the previous cell
 			currentCell = stack.pop();
 			currentCell.popped = true;
-			currentCell.setFloorColor(Color.DEEPPINK);
+			currentCell.setFloorColor(MyColor.currnetColor);
+		} else if(stack.isEmpty()) {
+			finish = true;
+			for(Cell[] cArr : grid) {
+				for(Cell c : cArr) {
+					c.setFloorColor(MyColor.floorColor);
+				}
+			}
 		}
 	}
 	
 	private void removeWalls(Cell a, Cell b) {
-		int i = a.rowInGrid - b.rowInGrid;
+		int i = a.getPos().row - b.getPos().row;
 		if(i == 1) {
 			a.hasWalls[DirectionType.TOP] = false;
 			b.hasWalls[DirectionType.BOTTOM] = false;
@@ -71,7 +79,7 @@ public class MazePane extends Pane {
 			a.hasWalls[DirectionType.BOTTOM] = false;
 		}
 		
-		int j = a.colInGrid - b.colInGrid;
+		int j = a.getPos().col - b.getPos().col;
 		if(j == 1) {
 			a.hasWalls[DirectionType.LEFT] = false;
 			b.hasWalls[DirectionType.RIGHT] = false;
@@ -85,8 +93,8 @@ public class MazePane extends Pane {
 	}
 	
 	private Cell checkNeighbors(Cell cell) {
-		int i = cell.rowInGrid;
-		int j = cell.colInGrid;
+		int i = cell.getPos().row;
+		int j = cell.getPos().col;
 
 		Cell top = isInsideTheGrid(i - 1, j) ? grid[i - 1][j] : null;
 		Cell right = isInsideTheGrid(i, j + 1) ? grid[i][j + 1] : null;
