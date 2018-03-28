@@ -8,6 +8,6 @@ Solve the maze by [A* search algorithm](https://en.wikipedia.org/wiki/A*_search_
 [![video img](https://i.ytimg.com/vi/pKnV6ViDpAI/hqdefault.jpg?sqp=-oaymwEYCKgBEF5IVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLAkhKHdMlpVvLGdYj7B8BGK0eFvsg)](https://youtu.be/pKnV6ViDpAI?t=201)
 
 ## Screenshots
-![screenshot](https://raw.githubusercontent.com/Ming-Chyuan/Maze-Generator/master/img/screenshot1.png)
+![screenshot1](https://raw.githubusercontent.com/Ming-Chyuan/Maze-Generator-And-Solver/master/img/screenshot1.png)
 
-![screenshot](https://raw.githubusercontent.com/Ming-Chyuan/Maze-Generator/master/img/screenshot2.png)
+![screenshot2](https://raw.githubusercontent.com/Ming-Chyuan/Maze-Generator-And-Solver/master/img/screenshot2.png)
