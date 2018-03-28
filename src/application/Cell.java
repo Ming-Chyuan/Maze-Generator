@@ -6,10 +6,9 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 
 public class Cell extends Group {
-	private final int size;
+	public final int size;
 	private Point pos;
 	private Rectangle floor;
 	
@@ -18,6 +17,11 @@ public class Cell extends Group {
 
 	private ArrayList<Line> walls = new ArrayList<>();
 	public boolean[] hasWalls = {true, true, true, true}; // top right bottom left
+
+	// A* algorithm
+	public int fScore = 0;
+	public int gScore = 0;
+	public int hScore = 0;
 	
 	public Cell(int row, int col, int size) {
 		pos = new Point(row, col, col * size, row * size);
