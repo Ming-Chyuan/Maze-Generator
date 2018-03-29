@@ -5,12 +5,12 @@ import java.util.Random;
 import java.util.Stack;
 
 public class MazeGenerator {
+	public boolean finish = false;
+	
 	private final int rows;
 	private final int cols;
 	private Cell[][] grid;
 	private Cell currentCell;
-	
-	public boolean finish = false;
 
 	private Stack<Cell> stack = new Stack<>();
 
@@ -20,7 +20,8 @@ public class MazeGenerator {
 		cols = grid[0].length;
 		currentCell = grid[startRow][startCol];
 	}
-
+	
+	// maze generation algorithm
 	public void generateMaze() {
 		currentCell.visited = true;
 		currentCell.setFloorColor(MyColor.visitedColor);
@@ -28,7 +29,6 @@ public class MazeGenerator {
 		if(currentCell.popped)
 			currentCell.setFloorColor(MyColor.backtrackColor);
 		
-		// WIKI: Maze generation algorithm
 		Cell nextCell = checkNeighbors(currentCell);
 		if(nextCell != null) {
 			// has neighbor
@@ -57,7 +57,7 @@ public class MazeGenerator {
 	}
 	
 	private void removeWalls(Cell a, Cell b) {
-		int i = a.getPos().row - b.getPos().row;
+		int i = a.pos.row - b.pos.row;
 		if(i == 1) {
 			a.hasWall[DirectionType.TOP] = false;
 			b.hasWall[DirectionType.BOTTOM] = false;
@@ -66,7 +66,7 @@ public class MazeGenerator {
 			a.hasWall[DirectionType.BOTTOM] = false;
 		}
 		
-		int j = a.getPos().col - b.getPos().col;
+		int j = a.pos.col - b.pos.col;
 		if(j == 1) {
 			a.hasWall[DirectionType.LEFT] = false;
 			b.hasWall[DirectionType.RIGHT] = false;
@@ -80,8 +80,8 @@ public class MazeGenerator {
 	}
 	
 	private Cell checkNeighbors(Cell cell) {
-		int i = cell.getPos().row;
-		int j = cell.getPos().col;
+		int i = cell.pos.row;
+		int j = cell.pos.col;
 
 		Cell top = isInsideTheGrid(i - 1, j) ? grid[i - 1][j] : null;
 		Cell right = isInsideTheGrid(i, j + 1) ? grid[i][j + 1] : null;

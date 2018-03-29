@@ -9,20 +9,21 @@ import javafx.scene.shape.Rectangle;
 
 public class Cell extends Group {
 	public final int size;
-	private Point pos;
+	public Point pos;
+
+	public boolean[] hasWall = {true, true, true, true}; // top right bottom left
+	private ArrayList<Line> walls = new ArrayList<>();
 	private Rectangle floor;
 	
+	// maze generation algorithm
 	public boolean visited = false;
 	public boolean popped = false;
-
-	private ArrayList<Line> walls = new ArrayList<>();
-	public boolean[] hasWall = {true, true, true, true}; // top right bottom left
 
 	// A* algorithm
 	public int fScore = 0;
 	public int gScore = 0;
 	public int hScore = 0;
-	
+
 	public Cell(int row, int col, int size) {
 		pos = new Point(row, col, col * size, row * size);
 		this.size = size;
@@ -64,9 +65,5 @@ public class Cell extends Group {
 	
 	public void setFloorColor(Color c) {
 		floor.setFill(c);
-	}
-	
-	public Point getPos() {
-		return pos;
 	}
 }

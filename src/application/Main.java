@@ -10,40 +10,29 @@ import javafx.scene.Scene;
 
 
 public class Main extends Application {	
-	private static final int width = 600;
-	private static final int height = 600;
-	private static final int speed = 100; // how many steps move in one second
+	@Override
+	public void start(Stage primaryStage) {
+		int width = 600;
+		int height = 600;
+		int speed = 100; // how many steps move in one second
 		
-	private static MazePane mazePane;
-
-	private static MazeGenerator mazeGenerator;
-	private static MazeSolver mazeSolver;
-	
-	private static void envirInit(Stage primaryStage) {
-		mazePane = new MazePane(width, height);
-		mazeGenerator = new MazeGenerator(mazePane.grid, mazePane.startRow, mazePane.startCol);
-		mazeSolver = new MazeSolver(mazePane.grid, mazePane.startRow, mazePane.startCol, mazePane.endRow, mazePane.endCol);
+		Maze maze = new Maze(width, height);
 		
-		Scene scene = new Scene(mazePane, width, height);
+		Scene scene = new Scene(maze.mazePane, width, height);
 		primaryStage.setTitle("Maze Generator and Solver");
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.initStyle(StageStyle.UTILITY);
 		primaryStage.show();
-	}
-	
-	@Override
-	public void start(Stage primaryStage) {
-		envirInit(primaryStage);
 		
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long arg0) { 
-				if(!mazeGenerator.finish) {
-					mazeGenerator.generateMaze();
+				if(!maze.mazeGenerator.finish) {
+					maze.mazeGenerator.generateMaze();
 				} else {
-					if(!mazeSolver.finish)
-						mazeSolver.searchPath(mazePane);
+					if(!maze.mazeSolver.finish)
+						maze.mazeSolver.searchPath(maze.mazePane);
 					else
 						this.stop();
 				}

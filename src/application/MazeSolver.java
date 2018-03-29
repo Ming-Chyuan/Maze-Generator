@@ -8,6 +8,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 
 public class MazeSolver {
+	public boolean finish = false;
+	
 	private final int rows;
 	private final int cols;
 	private final int endRow;
@@ -24,8 +26,6 @@ public class MazeSolver {
 	
 	private ArrayList<Line> linePath = new ArrayList<>();
 	
-	public boolean finish = false;
-	
 	public MazeSolver(Cell[][] grid, int startRow, int startCol, int endRow, int endCol) {
 		this.grid = grid;
 		rows = grid.length;
@@ -36,6 +36,7 @@ public class MazeSolver {
 		openSet.add(grid[startRow][startCol]);
 	}
 	
+	// A* algorithm
 	public void searchPath(Pane pathPane) {
 		if(!openSet.isEmpty()) {			
 			currentCell = openSet.get(findLowestIndexInOpenSet());
@@ -100,7 +101,7 @@ public class MazeSolver {
 	
 	private int heuristic(Cell c) {
 		// Manhattan distance between c and end
-		return Math.abs(c.getPos().row - endRow) + Math.abs(c.getPos().col - endCol);
+		return Math.abs(c.pos.row - endRow) + Math.abs(c.pos.col - endCol);
 	}
 	
 	private ArrayList<Cell> getNeighborList(Cell c) {
@@ -118,7 +119,7 @@ public class MazeSolver {
 	}
 	
 	private Cell getNeighbor(Cell c, int direction) {
-		Point pos = c.getPos();		
+		Point pos = c.pos;		
 		int row, col;
 		
 		if(direction == DirectionType.TOP) {
@@ -188,10 +189,10 @@ public class MazeSolver {
 	private Line getLineBetweenCells(Cell c1, Cell c2) {
 		int s = c1.size / 2;
 		
-		int c1X = c1.getPos().x + s;
-		int c2X = c2.getPos().x + s;
-		int c1Y = c1.getPos().y + s;
-		int c2Y = c2.getPos().y + s;
+		int c1X = c1.pos.x + s;
+		int c2X = c2.pos.x + s;
+		int c1Y = c1.pos.y + s;
+		int c2Y = c2.pos.y + s;
 		
 		Line l;
 		// avoid overlaps 
@@ -206,7 +207,7 @@ public class MazeSolver {
 		}
 		
 		l.setStroke(MyColor.currnetColor);
-		l.setStrokeWidth(MazePane.cellSize / 3);
+		l.setStrokeWidth(c1.size / 3);
 		l.setStrokeLineCap(StrokeLineCap.ROUND);
 		return l;
 	}
