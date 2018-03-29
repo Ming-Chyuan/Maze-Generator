@@ -9,16 +9,20 @@ import javafx.stage.StageStyle;
 import javafx.scene.Scene;
 
 
-public class Main extends Application {
+public class Main extends Application {	
 	private static final int width = 600;
 	private static final int height = 600;
-	private static final int cellSize = 20;
 	private static final int speed = 100; // how many steps move in one second
-	
+		
 	private static MazePane mazePane;
 
+	private static MazeGenerator mazeGenerator;
+	private static MazeSolver mazeSolver;
+	
 	private static void envirInit(Stage primaryStage) {
-		mazePane = new MazePane(width, height, cellSize);
+		mazePane = new MazePane(width, height);
+		mazeGenerator = new MazeGenerator(mazePane.grid, mazePane.startRow, mazePane.startCol);
+		mazeSolver = new MazeSolver(mazePane.grid, mazePane.startRow, mazePane.startCol, mazePane.endRow, mazePane.endCol);
 		
 		Scene scene = new Scene(mazePane, width, height);
 		primaryStage.setTitle("Maze Generator and Solver");
@@ -35,11 +39,13 @@ public class Main extends Application {
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long arg0) { 
-				if(!mazePane.finishGeneration) {
-					mazePane.generateMaze();
+				if(!mazeGenerator.finish) {
+					mazeGenerator.generateMaze();
 				} else {
-					if(!mazePane.finishSerch)
-						mazePane.findPath();
+					if(!mazeSolver.finish)
+						mazeSolver.searchPath(mazePane);
+					else
+						this.stop();
 				}
 				
 				try {

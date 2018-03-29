@@ -16,7 +16,7 @@ public class Cell extends Group {
 	public boolean popped = false;
 
 	private ArrayList<Line> walls = new ArrayList<>();
-	public boolean[] hasWalls = {true, true, true, true}; // top right bottom left
+	public boolean[] hasWall = {true, true, true, true}; // top right bottom left
 
 	// A* algorithm
 	public int fScore = 0;
@@ -44,13 +44,13 @@ public class Cell extends Group {
 		int x = pos.x;
 		int y = pos.y;
 		
-		if(hasWalls[DirectionType.TOP])
+		if(hasWall[DirectionType.TOP])
 			walls.add(newWall(x, y, x + size, y));
-		if(hasWalls[DirectionType.RIGHT])
+		if(hasWall[DirectionType.RIGHT])
 			walls.add(newWall(x + size, y, x + size, y + size));
-		if(hasWalls[DirectionType.BOTTOM])
+		if(hasWall[DirectionType.BOTTOM])
 			walls.add(newWall(x, y + size, x + size, y + size));
-		if(hasWalls[DirectionType.LEFT])
+		if(hasWall[DirectionType.LEFT])
 			walls.add(newWall(x, y, x, y + size));
 		
 		this.getChildren().addAll(walls);

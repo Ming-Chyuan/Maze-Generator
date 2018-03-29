@@ -12,5 +12,4 @@ public class MyColor {
 
 	public static Color openSetColor = Color.AQUA;
 	public static Color closeSetColor = Color.LIGHTCORAL;
-	public static Color pathColor = Color.YELLOW;
 }
