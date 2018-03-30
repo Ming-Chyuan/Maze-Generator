@@ -38,7 +38,7 @@ public class MazeGenerator {
 			
 			removeWalls(currentCell, nextCell);
 			
-			// ÃB¥~·s¼W Åı³X°İ¹LªºÂI¦³¾÷²v¦A³Q³X°İ Åı¸ô½u§óÂ×´I
+			// é¡å¤–æ–°å¢åŠŸèƒ½ è®“ cell æœ‰æ©Ÿç‡æœƒå†è¢«è¨ªå• è®“è·¯ç·šæ›´å¤šæ¨£åŒ–
 			if(new Random().nextInt(100) < cellRevisitedProbability ) {
 				currentCell.visited = false;
 				currentCell.setFloorColor(MyColor.floorColor);
