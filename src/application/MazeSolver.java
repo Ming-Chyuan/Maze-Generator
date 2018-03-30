@@ -16,6 +16,9 @@ public class MazeSolver {
 	private final int endCol;
 	private Cell[][] grid;
 	private Cell currentCell;
+
+	private final int gScoreWeight = 1;
+	private final int hScoreWeight = 2;
 	
 	// The set of cells already evaluated
 	private ArrayList<Cell> closeSet = new ArrayList<>();
@@ -79,7 +82,7 @@ public class MazeSolver {
 					
 					previousCellMap.put(neighbor, currentCell); // record which cell came from
 					neighbor.hScore = heuristic(neighbor);
-					neighbor.fScore = neighbor.gScore + neighbor.hScore;
+					neighbor.fScore = gScoreWeight * neighbor.gScore + hScoreWeight * neighbor.hScore;
 				}
 			}
 		} else {

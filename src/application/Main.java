@@ -14,7 +14,10 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		int width = 600;
 		int height = 600;
-		int speed = 100; // how many steps move in one second
+		
+		// how many steps move in one second
+		int generateSpeed = 100;
+		int searchSpeed = 10;
 		
 		Maze maze = new Maze(width, height);
 		
@@ -27,18 +30,19 @@ public class Main extends Application {
 		
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
-			public void handle(long arg0) { 
-				if(!maze.mazeGenerator.finish) {
-					maze.mazeGenerator.generateMaze();
-				} else {
-					if(!maze.mazeSolver.finish)
-						maze.mazeSolver.searchPath(maze.mazePane);
-					else
-						this.stop();
-				}
-				
+			public void handle(long arg0) {				
 				try {
-					TimeUnit.MILLISECONDS.sleep(1000 / speed);
+					if(!maze.mazeGenerator.finish) {
+						maze.mazeGenerator.generateMaze();
+						TimeUnit.MILLISECONDS.sleep(1000 / generateSpeed);
+					} else {
+						if(!maze. mazeSolver.finish) {
+							maze.mazeSolver.searchPath(maze.mazePane);
+							TimeUnit.MILLISECONDS.sleep(1000 / searchSpeed);
+						} else {
+							this.stop();
+						}
+					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

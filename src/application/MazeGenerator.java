@@ -12,6 +12,8 @@ public class MazeGenerator {
 	private Cell[][] grid;
 	private Cell currentCell;
 
+	private final int cellRevisitedProbability = 30; // percent
+	
 	private Stack<Cell> stack = new Stack<>();
 
 	public MazeGenerator(Cell[][] grid, int startRow, int startCol) {
@@ -29,12 +31,18 @@ public class MazeGenerator {
 		if(currentCell.popped)
 			currentCell.setFloorColor(MyColor.backtrackColor);
 		
-		Cell nextCell = checkNeighbors(currentCell);
+		Cell nextCell = getNeighbor(currentCell);
 		if(nextCell != null) {
 			// has neighbor
 			stack.push(currentCell);
 			
 			removeWalls(currentCell, nextCell);
+			
+			// 額外新增 讓訪問過的點有機率再被訪問 讓路線更豐富
+			if(new Random().nextInt(100) < cellRevisitedProbability ) {
+				currentCell.visited = false;
+				currentCell.setFloorColor(MyColor.floorColor);
+			}
 			
 			currentCell = nextCell;
 			currentCell.setFloorColor(MyColor.currnetColor);
@@ -79,7 +87,7 @@ public class MazeGenerator {
 		b.buildWalls();
 	}
 	
-	private Cell checkNeighbors(Cell cell) {
+	private Cell getNeighbor(Cell cell) {
 		int i = cell.pos.row;
 		int j = cell.pos.col;
 
