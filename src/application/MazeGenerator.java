@@ -6,13 +6,15 @@ import java.util.Stack;
 
 public class MazeGenerator {
 	public boolean finish = false;
-	
+
 	private final int rows;
 	private final int cols;
+	private final int startRow;
+	private final int startCol;
 	private Cell[][] grid;
 	private Cell currentCell;
 
-	private final int cellRevisitedProbability = 30; // percent
+	private final int cellRevisitedProbability = 20; // percent
 	
 	private Stack<Cell> stack = new Stack<>();
 
@@ -20,6 +22,8 @@ public class MazeGenerator {
 		this.grid = grid;
 		rows = grid.length;
 		cols = grid[0].length;
+		this.startRow = startRow;
+		this.startCol = startCol;
 		currentCell = grid[startRow][startCol];
 	}
 	
@@ -34,16 +38,17 @@ public class MazeGenerator {
 		Cell nextCell = getNeighbor(currentCell);
 		if(nextCell != null) {
 			// has neighbor
-			stack.push(currentCell);
-			
-			removeWalls(currentCell, nextCell);
-			
-			// 額外新增功能 讓 cell 有機率會再被訪問 讓路線更多樣化
+
 			if(new Random().nextInt(100) < cellRevisitedProbability ) {
+				// 額外新增功能 讓 cell 有機率會再被訪問 讓路線更多樣化
 				currentCell.visited = false;
 				currentCell.setFloorColor(MyColor.floorColor);
+			} else {
+				stack.push(currentCell);
 			}
 			
+			removeWalls(currentCell, nextCell);
+						
 			currentCell = nextCell;
 			currentCell.setFloorColor(MyColor.currnetColor);
 		} else if(!stack.isEmpty()) {
@@ -117,5 +122,9 @@ public class MazeGenerator {
 		if(0 <= row && row < rows && 0 <= col && col < cols)
 			return true;
 		return false;
+	}
+	
+	public void reset() {
+		currentCell = grid[startRow][startCol];
 	}
 }

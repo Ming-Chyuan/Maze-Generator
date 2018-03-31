@@ -32,6 +32,18 @@ public class Cell extends Group {
 		buildWalls();
 	}
 	
+	public void reset() {
+		this.getChildren().removeAll(walls);
+
+		visited = false;
+		popped = false;
+		hasWall = new boolean[] {true, true, true, true};
+		walls.clear();
+		
+		buildFloor();
+		buildWalls();
+	}
+	
 	private void buildFloor() {
 		floor = new Rectangle(pos.x, pos.y, size, size);
 		floor.setFill(MyColor.floorColor);

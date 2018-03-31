@@ -34,4 +34,17 @@ public class Maze {
 		mazeGenerator = new MazeGenerator(grid, startRow, startCol);
 		mazeSolver = new MazeSolver(grid, startRow, startCol, endRow, endCol);
 	}
+	
+	public void reset(Pane mazePane) {
+		for(int i = 0; i < rows; i++) {
+			for(int j = 0; j < cols; j++) {
+				grid[i][j].reset();
+			}
+		}
+		
+		mazeGenerator.finish = false;
+		mazeGenerator.reset();
+		mazeSolver.finish = false;
+		mazeSolver.reset(mazePane);
+	}
 }
