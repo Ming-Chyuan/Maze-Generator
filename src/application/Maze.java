@@ -22,14 +22,19 @@ public class Maze {
 		endCol = cols - 1;
 
 		grid = new Cell[rows][cols];
+
+		// let grid in the center of pane
+		int dx = width % cellSize / 2 + 5;
+		int dy = height % cellSize / 2 + 5;
 		
 		for(int i = 0; i < rows; i++) {
 			for(int j = 0; j < cols; j++) {
-				grid[i][j] = new Cell(i, j, cellSize);
+				grid[i][j] = new Cell(i, j, cellSize, dx, dy);
 				mazePane.getChildren().add(grid[i][j]);
 			}
 		}
 		
+		mazePane.setStyle("-fx-background-color: #404040;");
 		mazeGenerator = new MazeGenerator(grid, startRow, startCol);
 		mazeSolver = new MazeSolver(grid, startRow, startCol, endRow, endCol);
 	}

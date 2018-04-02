@@ -24,8 +24,8 @@ public class Cell extends Group {
 	public int gScore = 0;
 	public int hScore = 0;
 
-	public Cell(int row, int col, int size) {
-		pos = new Point(row, col, col * size, row * size);
+	public Cell(int row, int col, int size, int dx, int dy) {
+		pos = new Point(row, col, col * size + dx, row * size + dy);
 		this.size = size;
 		
 		buildFloor();
