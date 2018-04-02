@@ -12,8 +12,6 @@ public class MazeSolver {
 	
 	private final int rows;
 	private final int cols;
-	private final int startRow;
-	private final int startCol;
 	private final int endRow;
 	private final int endCol;
 	private Cell[][] grid;
@@ -35,8 +33,6 @@ public class MazeSolver {
 		this.grid = grid;
 		rows = grid.length;
 		cols = grid[0].length;
-		this.startRow = startRow;
-		this.startCol = startCol;
 		this.endRow = endRow;
 		this.endCol = endCol;
 		
@@ -223,17 +219,5 @@ public class MazeSolver {
 		if(0 <= row && row < rows && 0 <= col && col < cols)
 			return true;
 		return false;
-	}
-	
-	public void reset(Pane pathPane) {
-		currentCell = grid[startRow][startCol];
-		pathPane.getChildren().removeAll(linePath);
-		
-		closeSet.clear();
-		openSet.clear();
-		previousCellMap.clear();
-		linePath.clear();
-
-		openSet.add(grid[startRow][startCol]);
 	}
 }

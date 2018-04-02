@@ -9,8 +9,6 @@ public class MazeGenerator {
 
 	private final int rows;
 	private final int cols;
-	private final int startRow;
-	private final int startCol;
 	private Cell[][] grid;
 	private Cell currentCell;
 
@@ -22,8 +20,6 @@ public class MazeGenerator {
 		this.grid = grid;
 		rows = grid.length;
 		cols = grid[0].length;
-		this.startRow = startRow;
-		this.startCol = startCol;
 		currentCell = grid[startRow][startCol];
 	}
 	
@@ -122,9 +118,5 @@ public class MazeGenerator {
 		if(0 <= row && row < rows && 0 <= col && col < cols)
 			return true;
 		return false;
-	}
-	
-	public void reset() {
-		currentCell = grid[startRow][startCol];
 	}
 }

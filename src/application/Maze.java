@@ -6,7 +6,6 @@ public class Maze {
 	private Cell[][] grid;
 	private final int rows;
 	private final int cols;
-	private final int cellSize = 20;
 	private final int startRow = 0;
 	private final int startCol = 0;
 	private final int endRow;
@@ -16,7 +15,7 @@ public class Maze {
 	public MazeGenerator mazeGenerator;
 	public MazeSolver mazeSolver;
 	
-	public Maze(int width, int height) {
+	public Maze(int width, int height, int cellSize) {
 		rows = height / cellSize;
 		cols = width / cellSize;
 		endRow = rows - 1;
@@ -33,18 +32,5 @@ public class Maze {
 		
 		mazeGenerator = new MazeGenerator(grid, startRow, startCol);
 		mazeSolver = new MazeSolver(grid, startRow, startCol, endRow, endCol);
-	}
-	
-	public void reset(Pane mazePane) {
-		for(int i = 0; i < rows; i++) {
-			for(int j = 0; j < cols; j++) {
-				grid[i][j].reset();
-			}
-		}
-		
-		mazeGenerator.finish = false;
-		mazeGenerator.reset();
-		mazeSolver.finish = false;
-		mazeSolver.reset(mazePane);
 	}
 }

@@ -2,8 +2,6 @@ package application;
 	
 import java.util.concurrent.TimeUnit;
 
-import com.sun.glass.events.KeyEvent;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -22,17 +20,15 @@ public class Main extends Application {
 	private static boolean start = false;
 	private static boolean pause = false;
 	private static boolean waittingToRestart = false;
+	private static Maze maze = new Maze(width, height, 100);
 	
 	@Override
-	public void start(Stage primaryStage) {
-		int width = 600;
-		int height = 600;
-				
+	public void start(Stage primaryStage) {				
 		// how many steps move in one second
 		int generateSpeed = 100; 
 		int searchSpeed = 30;
-				
-		Maze maze = new Maze(width, height);
+
+//		Maze maze = new Maze(width, height, 20);
 		Scene scene = new Scene(maze.mazePane, width, height);
 		primaryStage.setTitle("Maze Generator and Solver");
 		primaryStage.setScene(scene);
@@ -60,9 +56,10 @@ public class Main extends Application {
 						Button btn = getBtn("Restart", 60, 30);
 						btn.setOnAction(e -> {
 							waittingToRestart = false;
-							maze.mazePane.getChildren().remove(bg);
-							maze.mazePane.getChildren().remove(btn);
-							maze.reset(maze.mazePane);
+							
+							maze = new Maze(width, height, 20);
+							scene.setRoot(maze.mazePane);
+							
 							this.start();
 						});
 						maze.mazePane.getChildren().add(bg);
