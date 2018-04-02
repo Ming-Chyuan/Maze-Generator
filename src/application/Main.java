@@ -2,6 +2,8 @@ package application;
 	
 import java.util.concurrent.TimeUnit;
 
+import com.sun.glass.events.KeyEvent;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -9,6 +11,7 @@ import javafx.stage.StageStyle;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -16,6 +19,9 @@ import javafx.scene.shape.Rectangle;
 public class Main extends Application {
 	private static int width = 600;
 	private static int height = 600;
+	private static boolean start = false;
+	private static boolean pause = false;
+	private static boolean waittingToRestart = false;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -25,7 +31,7 @@ public class Main extends Application {
 		// how many steps move in one second
 		int generateSpeed = 100; 
 		int searchSpeed = 30;
-		
+				
 		Maze maze = new Maze(width, height);
 		Scene scene = new Scene(maze.mazePane, width, height);
 		primaryStage.setTitle("Maze Generator and Solver");
@@ -46,12 +52,14 @@ public class Main extends Application {
 							TimeUnit.MILLISECONDS.sleep(1000 / searchSpeed);
 					} else {
 						// restart
-						TimeUnit.SECONDS.sleep(2);
+//						TimeUnit.SECONDS.sleep(2);
 						this.stop();
-						
+						waittingToRestart = true;
+												
 						Rectangle bg = getBG();
 						Button btn = getBtn("Restart", 60, 30);
 						btn.setOnAction(e -> {
+							waittingToRestart = false;
 							maze.mazePane.getChildren().remove(bg);
 							maze.mazePane.getChildren().remove(btn);
 							maze.reset(maze.mazePane);
@@ -66,10 +74,24 @@ public class Main extends Application {
 			}
 		};
 
+		// pause
+		scene.setOnKeyReleased(e -> {
+			if(start && e.getCode() == KeyCode.P) {
+				if(!pause && (!maze.mazeGenerator.finish || !maze. mazeSolver.finish)) {
+					pause = true;
+					timer.stop();
+				} else if(!waittingToRestart) {
+					pause = false;
+					timer.start();
+				}
+			}
+		});
+
 		// start
 		Rectangle bg = getBG();
 		Button btn = getBtn("Start", 50, 30);
 		btn.setOnAction(e -> {
+			start = true;
 			maze.mazePane.getChildren().remove(bg);
 			maze.mazePane.getChildren().remove(btn);
 			timer.start();
