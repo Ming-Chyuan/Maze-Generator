@@ -4,45 +4,50 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 
 public class MazeSolver {
 	public boolean finish = false;
-	
+	public boolean clickForStartCell = true;
+
 	private final int rows;
 	private final int cols;
-	private final int endRow;
-	private final int endCol;
+	private int originRow;
+	private int originCol;
+	private int destinationRow;
+	private int destinationCol;
+	private int solveCount;
+	private int gScoreWeight;
+	private int hScoreWeight;
 	private Cell[][] grid;
 	private Cell currentCell;
-
-	private final int gScoreWeight = 1;
-	private final int hScoreWeight = 2;
+	private Color pathColor;
+	private ArrayList<Line> linePath;
 	
 	// The set of cells already evaluated
-	private ArrayList<Cell> closeSet = new ArrayList<>();
+	private ArrayList<Cell> closeSet;
 	// The set of currently discovered cells that are not evaluated yet.
-	private ArrayList<Cell> openSet = new ArrayList<>();
+	private ArrayList<Cell> openSet;
 	// cell -> the cell which came from
-	private HashMap<Cell, Cell> previousCellMap = new HashMap<>();
+	private HashMap<Cell, Cell> previousCellMap;
 	
-	private ArrayList<Line> linePath = new ArrayList<>();
-	
-	public MazeSolver(Cell[][] grid, int startRow, int startCol, int endRow, int endCol) {
+	public MazeSolver(Cell[][] grid) {
 		this.grid = grid;
 		rows = grid.length;
 		cols = grid[0].length;
-		this.endRow = endRow;
-		this.endCol = endCol;
-		
-		openSet.add(grid[startRow][startCol]);
+		solveCount = 0;
+		linePath = new ArrayList<>();
+		closeSet = new ArrayList<>();
+		openSet = new ArrayList<>();
+		previousCellMap = new HashMap<>();
 	}
 	
 	// A* algorithm
 	public void searchPath(Pane pathPane) {
 		if(!openSet.isEmpty()) {			
-			currentCell = openSet.get(findLowestIndexInOpenSet());
+			currentCell = getCellWithLowestFInOpenset();
 			
 			/*
 			 * 	Object o
@@ -56,18 +61,15 @@ public class MazeSolver {
 			 * 	see the answer with the second highest score:
 			 * 	https://stackoverflow.com/questions/40480/is-java-pass-by-reference-or-pass-by-value
 			 */
-			if(currentCell == grid[endRow][endCol]) {  
+			if(currentCell == grid[destinationRow][destinationCol]) {  
 				finish = true;
 			}
 			
 			openSet.remove(currentCell);
 			closeSet.add(currentCell);
 			
-			ArrayList<Cell> neighborList = getNeighborList(currentCell);
-			
-			for(Cell neighbor : neighborList) {
-				if(!closeSet.contains(neighbor)) {
-					// the neighbor which is not already evaluated
+			for(Cell neighbor : getNeighbors(currentCell)) {
+				if(!closeSet.contains(neighbor)) { // the neighbor is not already evaluated					
 					int tempG = currentCell.gScore + 1;
 					
 					if(openSet.contains(neighbor)) {
@@ -89,92 +91,93 @@ public class MazeSolver {
 			// no solution
 		}
 		
-		drawAStarSolution(pathPane);
+		drawStep(pathPane);
 	}
 	
-	private int findLowestIndexInOpenSet() {
+	private Cell getCellWithLowestFInOpenset() {
 		int lowestIndex = 0;
 		for(int i = 0; i < openSet.size(); i++) {
 			if(openSet.get(i).fScore < openSet.get(lowestIndex).fScore) {
 				lowestIndex = i;
 			}
 		}
-		return lowestIndex;
+		return openSet.get(lowestIndex);
 	}
 	
 	private int heuristic(Cell c) {
-		// Manhattan distance between c and end
-		return Math.abs(c.pos.row - endRow) + Math.abs(c.pos.col - endCol);
+		// Manhattan distance between c and destination
+		return Math.abs(c.pos.row - destinationRow) + Math.abs(c.pos.col - destinationCol);
 	}
 	
-	private ArrayList<Cell> getNeighborList(Cell c) {
-		ArrayList<Cell> neightborList = new ArrayList<>();
+	private ArrayList<Cell> getNeighbors(Cell c) {
+		ArrayList<Cell> neightbors = new ArrayList<>();
 		
 		for(int i = 0; i < c.hasWall.length; i++) {
 			if(!c.hasWall[i]) {
 				Cell neightbor = getNeighbor(c, i);
 				if(neightbor != null)
-					neightborList.add(neightbor);
+					neightbors.add(neightbor);
 			}
 		}
 		
-		return neightborList;
+		return neightbors;
 	}
 	
 	private Cell getNeighbor(Cell c, int direction) {
-		Point pos = c.pos;		
 		int row, col;
 		
 		if(direction == DirectionType.TOP) {
-			row = pos.row - 1;
-			col = pos.col;
+			row = c.pos.row - 1;
+			col = c.pos.col;
 		} else if(direction == DirectionType.RIGHT) {
-			row = pos.row;
-			col = pos.col + 1;
+			row = c.pos.row;
+			col = c.pos.col + 1;
 		} else if(direction == DirectionType.BOTTOM) {
-			row = pos.row + 1;
-			col = pos.col;
+			row = c.pos.row + 1;
+			col = c.pos.col;
 		} else { // left
-			row = pos.row;
-			col = pos.col - 1;
+			row = c.pos.row;
+			col = c.pos.col - 1;
 		}
 		
 		return isInsideTheGrid(row, col) ? grid[row][col] : null;
 	}
 	
-	private void drawAStarSolution(Pane pathPane) {
+	private void drawStep(Pane pane) {
 		for(Cell c : openSet) {
-			c.setFloorColor(MyColor.openSetColor);
+			c.setFloorColor(MyColor.openSet);
 		}
 
 		for(Cell c : closeSet) {
-			c.setFloorColor(MyColor.closeSetColor);
+			c.setFloorColor(MyColor.closeSet);
 		}
 		
-		currentCell.setFloorColor(MyColor.currnetColor);
-		
-		drawLinePath(pathPane);
+		drawPath(pane);
+
+		grid[originRow][originCol].setFloorColor(MyColor.originFloor);
+		grid[destinationRow][destinationCol].setFloorColor(MyColor.destinationFloor);
 	}
 	
-	private void drawLinePath(Pane pathPane) {
-		pathPane.getChildren().removeAll(linePath);
+	private void drawPath(Pane pane) {
+		pane.getChildren().removeAll(linePath);
 		linePath.clear();
 		
-		// use all cells in the path to draw lines
-		for(Cell c : getCellPath()) {
-			c.setFloorColor(MyColor.floorColor);
+		for(Cell c : getCellsOnPath()) {
+			c.setFloorColor(MyColor.floor);
 			
 			Cell cPre = previousCellMap.get(c);
-			if(cPre == null)
-				break;
-			Line l = getLineBetweenCells(c, cPre);
+			if(cPre == null) break;
+			
+			Line l = createLineBetweenCells(c, cPre);
 			linePath.add(l);
-			pathPane.getChildren().add(l);
+			pane.getChildren().add(l);
 		}
+		
+		currentCell.setFloorColor(MyColor.currnet);
 	}
 	
-	private ArrayList<Cell> getCellPath() {
-		// cells in the list which are all in the path
+	private ArrayList<Cell> getCellsOnPath() {
+		// this list contains all cells of the path
 		ArrayList<Cell> cellPath = new ArrayList<>();
 		
 		Cell c = currentCell;
@@ -189,35 +192,80 @@ public class MazeSolver {
 		return cellPath;
 	}
 	
-	private Line getLineBetweenCells(Cell c1, Cell c2) {
+	private Line createLineBetweenCells(Cell c1, Cell c2) {
 		int s = c1.size / 2;
-		
 		int c1X = c1.pos.x + s;
 		int c2X = c2.pos.x + s;
 		int c1Y = c1.pos.y + s;
 		int c2Y = c2.pos.y + s;
 		
-		Line l;
-		// avoid overlaps 
-		if(c1X > c2X) {
-			l = new Line(c1X, c1Y, c2X + 1, c2Y);
-		} else if(c1X < c2X) {
-			l = new Line(c1X, c1Y, c2X - 1, c2Y);
-		} else if(c1Y > c2Y) {
-			l = new Line(c1X, c1Y, c2X, c2Y + 1);
-		} else {
-			l = new Line(c1X, c1Y, c2X, c2Y - 1);
-		}
-		
-		l.setStroke(MyColor.currnetColor);
-		l.setStrokeWidth(c1.size / 3);
+		Line l = new Line(c1X, c1Y, c2X, c2Y);
+		l.setStroke(pathColor);
+		l.setStrokeWidth(c1.size / 2 * Math.pow(0.7, solveCount));
 		l.setStrokeLineCap(StrokeLineCap.ROUND);
 		return l;
 	}
 
 	private boolean isInsideTheGrid(int row, int col) {
-		if(0 <= row && row < rows && 0 <= col && col < cols)
-			return true;
+		if(0 <= row && row < rows && 0 <= col && col < cols) return true;
 		return false;
+	}
+	
+	public void reset() {
+		closeSet.clear();
+		openSet.clear();
+		previousCellMap.clear();
+		linePath.clear();
+
+		finish = false;
+		solveCount++;
+		openSet.add(grid[originRow][originCol]);
+	}
+	
+	public int getLengthOfPath() {
+		return linePath.size();
+	}
+	
+	public void setWeight(int gW, int hW) {
+		gScoreWeight = gW;
+		hScoreWeight = hW;
+	}
+	
+	public void setPathColor(Color c) {
+		pathColor = c;
+	}
+	
+	public void setOriginCell(int row, int col) {
+		clickForStartCell = !clickForStartCell;
+		originRow = row;
+		originCol = col;
+		openSet.clear();
+		
+		drawOriginAndDestination();
+		openSet.add(grid[originRow][originCol]);
+	}
+	
+	public void setDestinationCell(int row, int col) {
+		clickForStartCell = !clickForStartCell;
+		destinationRow = row;
+		destinationCol = col;
+		drawOriginAndDestination();
+	}
+
+	private void drawOriginAndDestination() {
+		for(Cell[] cArr : grid) {
+			for(Cell c : cArr) {
+				c.setFloorColor(MyColor.floor);
+			}
+		}
+		
+		Cell origin = grid[originRow][originCol];
+		origin.setFloorColor(MyColor.originFloor);
+		Cell destination = grid[destinationRow][destinationCol];
+		destination.setFloorColor(MyColor.destinationFloor);
+		
+		if(origin == destination) {
+			origin.setFloorColor(MyColor.originIsDestination);
+		}
 	}
 }

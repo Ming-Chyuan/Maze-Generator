@@ -1,0 +1,76 @@
+#maze-pane {
+	-fx-background-color: #404040;
+	-fx-padding: 5;
+}
+
+#control-pane {
+	-fx-background-color: #404040;
+	-fx-padding: 10;
+	-fx-alignment: top-center;
+	-fx-border-width: 0 0 0 1;
+	-fx-border-color: #FFF;
+}
+
+.table-cell {
+    -fx-alignment: CENTER;
+}
+
+.table-view , .table-view .filler {
+	-fx-background-color: #262626;
+}
+
+.table-view .column-header {
+    -fx-background-color: #262626;
+}
+
+.table-row-cell {
+    -fx-background-color: -fx-table-cell-border-color, #616161;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -fx-table-cell-border-color, #424242;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: #FFF;
+}
+
+.button {
+	-fx-cursor: hand;
+	-fx-background-color: #696;
+	-fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.8), 10, 0, 0, 0);
+	-fx-font-weight: 900;
+	-fx-text-fill: #fff;
+	-fx-font-size: 1.2em;
+}
+
+.button:pressed {
+	-fx-background-color: #a9c53a;
+	-fx-border-color: null;
+}
+
+.slider .thumb {
+	-fx-background-color: #696;
+	-fx-background-radius: 0, 0;
+}
+
+.slider .thumb:pressed {
+	-fx-background-color: #a9c53a;
+}
+
+.slider .thumb:hover {
+	-fx-background-color: #a9c53a;
+}
+
+.slider .track {
+    -fx-background-color: null;  /* Hide the track */
+}
+
+.slider {
+	-fx-background-color: #777;
+}
+
+.label {
+	-fx-text-fill: #fff;
+	-fx-font-weight: 900;
+}

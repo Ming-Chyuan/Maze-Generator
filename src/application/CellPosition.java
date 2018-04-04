@@ -1,6 +1,6 @@
 package application;
 
-public class Point {
+public class CellPosition {
 	// in grid
 	public final int row;
 	public final int col;
@@ -8,7 +8,7 @@ public class Point {
 	public final int x;
 	public final int y;
 	
-	public Point(int row, int col, int x, int y) {
+	public CellPosition(int row, int col, int x, int y) {
 		this.row = row;
 		this.col = col;
 		this.x = x;

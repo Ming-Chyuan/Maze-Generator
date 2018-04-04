@@ -5,40 +5,42 @@ import java.util.Random;
 import java.util.Stack;
 
 public class MazeGenerator {
-	public boolean finish = false;
+	public boolean finish;
 
 	private final int rows;
 	private final int cols;
-	private Cell[][] grid;
+	private final int cellRevisitedProbability; // percent
+	private final Cell[][] grid;
 	private Cell currentCell;
+	private Stack<Cell> stack;
 
-	private final int cellRevisitedProbability = 20; // percent
-	
-	private Stack<Cell> stack = new Stack<>();
-
-	public MazeGenerator(Cell[][] grid, int startRow, int startCol) {
+	public MazeGenerator(Cell[][] grid, int revisitProb) {
 		this.grid = grid;
+		finish = false;
 		rows = grid.length;
 		cols = grid[0].length;
-		currentCell = grid[startRow][startCol];
+		cellRevisitedProbability = revisitProb;
+		currentCell = grid[new Random().nextInt(rows)][new Random().nextInt(cols)];
+		stack = new Stack<>();
 	}
 	
 	// maze generation algorithm
 	public void generateMaze() {
 		currentCell.visited = true;
-		currentCell.setFloorColor(MyColor.visitedColor);
+		currentCell.setFloorColor(MyColor.visited);
 		
 		if(currentCell.popped)
-			currentCell.setFloorColor(MyColor.backtrackColor);
+			currentCell.setFloorColor(MyColor.backtrack);
 		
 		Cell nextCell = getNeighbor(currentCell);
 		if(nextCell != null) {
 			// has neighbor
 
-			if(new Random().nextInt(100) < cellRevisitedProbability ) {
+			if(new Random().nextInt(100) < cellRevisitedProbability) {
+				// can revisit this cell
 				// 額外新增功能 讓 cell 有機率會再被訪問 讓路線更多樣化
 				currentCell.visited = false;
-				currentCell.setFloorColor(MyColor.floorColor);
+				currentCell.setFloorColor(MyColor.floor);
 			} else {
 				stack.push(currentCell);
 			}
@@ -46,20 +48,20 @@ public class MazeGenerator {
 			removeWalls(currentCell, nextCell);
 						
 			currentCell = nextCell;
-			currentCell.setFloorColor(MyColor.currnetColor);
+			currentCell.setFloorColor(MyColor.currnet);
 		} else if(!stack.isEmpty()) {
 			// current cell is dead end 
-			currentCell.setFloorColor(MyColor.backtrackColor);
+			currentCell.setFloorColor(MyColor.backtrack);
 			
 			// backtrack to the previous cell
 			currentCell = stack.pop();
 			currentCell.popped = true;
-			currentCell.setFloorColor(MyColor.currnetColor);
+			currentCell.setFloorColor(MyColor.currnet);
 		} else if(stack.isEmpty()) {
 			finish = true;
 			for(Cell[] cArr : grid) {
 				for(Cell c : cArr) {
-					c.setFloorColor(MyColor.floorColor);
+					c.setFloorColor(MyColor.floor);
 				}
 			}
 		}

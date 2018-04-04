@@ -9,24 +9,31 @@ import javafx.scene.shape.Rectangle;
 
 public class Cell extends Group {
 	public final int size;
-	public Point pos;
+	public CellPosition pos;
 
-	public boolean[] hasWall = {true, true, true, true}; // top right bottom left
-	private ArrayList<Line> walls = new ArrayList<>();
+	public boolean[] hasWall; // {top, right, bottom, left}
+	private ArrayList<Line> walls;
 	private Rectangle floor;
 	
-	// maze generation algorithm
-	public boolean visited = false;
-	public boolean popped = false;
+	// for maze generation algorithm
+	public boolean visited;
+	public boolean popped;
 
-	// A* algorithm
-	public int fScore = 0;
-	public int gScore = 0;
-	public int hScore = 0;
+	// for A* algorithm
+	public int fScore;
+	public int gScore;
+	public int hScore;
 
 	public Cell(int row, int col, int size, int dx, int dy) {
-		pos = new Point(row, col, col * size + dx, row * size + dy);
 		this.size = size;
+		pos = new CellPosition(row, col, col * size + dx, row * size + dy);
+		hasWall = new boolean[] {true, true, true, true};
+		walls = new ArrayList<>();
+		visited = false;
+		popped = false;
+		fScore = 0;
+		gScore = 0;
+		hScore = 0;
 		
 		buildFloor();
 		buildWalls();
@@ -34,7 +41,7 @@ public class Cell extends Group {
 	
 	private void buildFloor() {
 		floor = new Rectangle(pos.x, pos.y, size, size);
-		floor.setFill(MyColor.floorColor);
+		floor.setFill(MyColor.floor);
 		this.getChildren().add(floor);
 	}
 	
@@ -59,7 +66,7 @@ public class Cell extends Group {
 	
 	private Line newWall(int startX, int startY, int endX, int endY) {
 		Line l = new Line(startX, startY, endX, endY);
-		l.setStroke(MyColor.wallColor);
+		l.setStroke(MyColor.wall);
 		return l;
 	}
 	
