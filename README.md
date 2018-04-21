@@ -3,7 +3,7 @@
 ## Maze Generator
 
 Basically, it was implemented by [maze generation algorithm](https://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_backtracker) in javaFX.  
-Each cell has a chance to be revisited again, if you set the probability greater than 0.  
+Each cell has a chance to be visited again and again, if you set the probability greater than 0.  
 
 ## Maze Solver
 Solve the maze with [A* search algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm).
